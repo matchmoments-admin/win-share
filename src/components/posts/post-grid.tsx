@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { CATEGORIES } from "@/lib/templates/categories";
 import { PostCard } from "@/components/posts/post-card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  Search,
+  CheckSquare,
+  X,
+} from "lucide-react";
+import { BulkActionBar } from "@/components/posts/bulk-action-bar";
 
 interface PostImage {
   id: string;
@@ -40,6 +49,7 @@ interface PostGridProps {
   pageSize: number;
   category?: string;
   sortBy?: string;
+  search?: string;
 }
 
 const sortOptions = [
@@ -55,14 +65,31 @@ export function PostGrid({
   pageSize,
   category,
   sortBy,
+  search,
 }: PostGridProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [postList, setPostList] = useState(posts);
+  const [searchValue, setSearchValue] = useState(search ?? "");
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const totalPages = Math.ceil(total / pageSize);
   const hasPrevious = page > 1;
   const hasNext = page < totalPages;
+
+  // Sync posts from server
+  useEffect(() => {
+    setPostList(posts);
+  }, [posts]);
+
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   const updateParams = useCallback(
     (updates: Record<string, string | undefined>) => {
@@ -83,8 +110,46 @@ export function PostGrid({
     [router, searchParams]
   );
 
+  function handleSearchChange(value: string) {
+    setSearchValue(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      updateParams({ q: value || undefined });
+    }, 300);
+  }
+
   function handleDelete(postId: string) {
     setPostList((prev) => prev.filter((p) => p.id !== postId));
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.delete(postId);
+      return next;
+    });
+  }
+
+  function handleBulkDeleted(deletedIds: string[]) {
+    setPostList((prev) => prev.filter((p) => !deletedIds.includes(p.id)));
+    setSelectedIds(new Set());
+    setSelectionMode(false);
+    // Refresh server data to get accurate total count and pagination
+    router.refresh();
+  }
+
+  function toggleSelect(postId: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(postId)) {
+        next.delete(postId);
+      } else {
+        next.add(postId);
+      }
+      return next;
+    });
+  }
+
+  function exitSelectionMode() {
+    setSelectionMode(false);
+    setSelectedIds(new Set());
   }
 
   return (
@@ -92,6 +157,17 @@ export function PostGrid({
       {/* Filter Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search posts..."
+              value={searchValue}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-[200px] pl-9"
+            />
+          </div>
+
           <Select
             value={category ?? "all"}
             onValueChange={(value) => updateParams({ category: value })}
@@ -126,9 +202,32 @@ export function PostGrid({
           </Select>
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          {total} post{total !== 1 ? "s" : ""} total
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-muted-foreground">
+            {total} post{total !== 1 ? "s" : ""} total
+          </p>
+          {postList.length > 0 && (
+            <Button
+              variant={selectionMode ? "secondary" : "outline"}
+              size="sm"
+              onClick={() =>
+                selectionMode ? exitSelectionMode() : setSelectionMode(true)
+              }
+            >
+              {selectionMode ? (
+                <>
+                  <X className="mr-1 h-4 w-4" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <CheckSquare className="mr-1 h-4 w-4" />
+                  Select
+                </>
+              )}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Grid */}
@@ -137,16 +236,27 @@ export function PostGrid({
           <LayoutGrid className="mb-4 h-12 w-12 text-muted-foreground/40" />
           <h3 className="text-lg font-semibold">No posts yet</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Create your first post to get started.
+            {search
+              ? "No posts match your search. Try a different query."
+              : "Create your first post to get started."}
           </p>
-          <Button className="mt-4" onClick={() => router.push("/create")}>
-            Create Post
-          </Button>
+          {!search && (
+            <Button className="mt-4" onClick={() => router.push("/create")}>
+              Create Post
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {postList.map((post) => (
-            <PostCard key={post.id} post={post} onDelete={handleDelete} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onDelete={handleDelete}
+              selectionMode={selectionMode}
+              isSelected={selectedIds.has(post.id)}
+              onToggleSelect={toggleSelect}
+            />
           ))}
         </div>
       )}
@@ -180,6 +290,15 @@ export function PostGrid({
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
+      )}
+
+      {/* Bulk Action Bar */}
+      {selectionMode && selectedIds.size > 0 && (
+        <BulkActionBar
+          selectedIds={Array.from(selectedIds)}
+          onDeleted={handleBulkDeleted}
+          onCancel={exitSelectionMode}
+        />
       )}
     </div>
   );

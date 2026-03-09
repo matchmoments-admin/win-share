@@ -9,19 +9,27 @@ import {
   Palette,
   Building2,
   CreditCard,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SidebarUsage } from "@/components/layout/sidebar-usage";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Create Post", href: "/create", icon: PlusCircle },
   { name: "My Posts", href: "/posts", icon: Image },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Templates", href: "/templates", icon: Palette },
   { name: "Brand", href: "/brand", icon: Building2 },
   { name: "Billing", href: "/billing", icon: CreditCard },
 ];
 
-export function Sidebar({ className }: { className?: string }) {
+interface SidebarProps {
+  className?: string;
+  postUsage?: { current: number; limit: number } | null;
+}
+
+export function Sidebar({ className, postUsage }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -64,6 +72,13 @@ export function Sidebar({ className }: { className?: string }) {
           );
         })}
       </nav>
+
+      {/* Usage Meter */}
+      {postUsage && (
+        <div className="border-t border-white/10">
+          <SidebarUsage current={postUsage.current} limit={postUsage.limit} />
+        </div>
+      )}
 
       {/* Footer */}
       <div className="border-t border-white/10 px-6 py-4">

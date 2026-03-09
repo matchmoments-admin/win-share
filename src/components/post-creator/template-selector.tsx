@@ -1,16 +1,26 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Check, LayoutTemplate } from "lucide-react";
 import type { ContentCategory } from "@/lib/templates/categories";
 
+export type TemplateData = {
+  id: string;
+  name: string;
+  category: string;
+  thumbnailUrl: string | null;
+  isSystem: boolean;
+};
+
 type TemplateSelectorProps = {
   categoryId: ContentCategory["id"] | null;
   selectedTemplateId: string;
   onChange: (templateId: string) => void;
+  templates?: TemplateData[];
 };
 
 type PlaceholderTemplate = {
@@ -19,10 +29,6 @@ type PlaceholderTemplate = {
   description: string;
 };
 
-/**
- * Placeholder templates -- these will be replaced with real Templated.io
- * templates once the integration is wired up.
- */
 function getPlaceholderTemplates(
   categoryId: ContentCategory["id"] | null
 ): PlaceholderTemplate[] {
@@ -100,17 +106,104 @@ export function TemplateSelector({
   categoryId,
   selectedTemplateId,
   onChange,
+  templates: dbTemplates,
 }: TemplateSelectorProps) {
-  const templates = useMemo(
-    () => getPlaceholderTemplates(categoryId),
-    [categoryId]
+  // Filter DB templates by selected category
+  const filteredDbTemplates = useMemo(() => {
+    if (!dbTemplates || dbTemplates.length === 0) return [];
+    if (!categoryId) return dbTemplates;
+    return dbTemplates.filter((t) => t.category === categoryId);
+  }, [dbTemplates, categoryId]);
+
+  const hasRealTemplates = filteredDbTemplates.length > 0;
+
+  const placeholderTemplates = useMemo(
+    () => (hasRealTemplates ? [] : getPlaceholderTemplates(categoryId)),
+    [categoryId, hasRealTemplates]
   );
 
+  // Render real templates from DB
+  if (hasRealTemplates) {
+    return (
+      <div className="space-y-2">
+        <Label>Template</Label>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {filteredDbTemplates.map((template) => {
+            const isSelected = selectedTemplateId === template.id;
+
+            return (
+              <Card
+                key={template.id}
+                className={`cursor-pointer transition-colors ${
+                  isSelected
+                    ? "border-primary ring-2 ring-primary/20"
+                    : "hover:border-muted-foreground/30"
+                }`}
+                onClick={() => onChange(template.id)}
+              >
+                <CardContent className="p-3">
+                  {/* Thumbnail */}
+                  <div
+                    className={`relative mb-2 h-20 overflow-hidden rounded-md ${
+                      isSelected ? "ring-1 ring-primary/20" : ""
+                    }`}
+                  >
+                    {template.thumbnailUrl ? (
+                      <Image
+                        src={template.thumbnailUrl}
+                        alt={template.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 200px"
+                      />
+                    ) : (
+                      <div
+                        className={`flex h-full items-center justify-center ${
+                          isSelected ? "bg-primary/10" : "bg-muted"
+                        }`}
+                      >
+                        <LayoutTemplate
+                          className={`size-8 ${
+                            isSelected
+                              ? "text-primary"
+                              : "text-muted-foreground/40"
+                          }`}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium leading-tight">
+                        {template.name}
+                      </p>
+                      {isSelected && (
+                        <Check className="size-3.5 shrink-0 text-primary" />
+                      )}
+                    </div>
+                  </div>
+
+                  {template.isSystem && (
+                    <Badge variant="secondary" className="mt-2 text-[10px]">
+                      System
+                    </Badge>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback to placeholder templates
   return (
     <div className="space-y-2">
       <Label>Template</Label>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {templates.map((template) => {
+        {placeholderTemplates.map((template) => {
           const isSelected = selectedTemplateId === template.id;
 
           return (
@@ -124,7 +217,6 @@ export function TemplateSelector({
               onClick={() => onChange(template.id)}
             >
               <CardContent className="p-3">
-                {/* Placeholder thumbnail */}
                 <div
                   className={`mb-2 flex h-20 items-center justify-center rounded-md ${
                     isSelected ? "bg-primary/10" : "bg-muted"

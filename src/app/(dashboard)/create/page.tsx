@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { brandSettings } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { PostForm, type BrandSettings } from "@/components/post-creator/post-form";
+import { listTemplates } from "@/lib/db/queries/templates";
 
 export const metadata = {
   title: "Create Post",
@@ -12,12 +13,15 @@ export const metadata = {
 export default async function CreatePostPage() {
   const { orgId } = await requireAuth();
 
-  // Fetch brand settings for the current organisation
-  const [brand] = await db
-    .select()
-    .from(brandSettings)
-    .where(eq(brandSettings.organizationId, orgId))
-    .limit(1);
+  // Fetch brand settings and templates in parallel
+  const [[brand], dbTemplates] = await Promise.all([
+    db
+      .select()
+      .from(brandSettings)
+      .where(eq(brandSettings.organizationId, orgId))
+      .limit(1),
+    listTemplates({ organizationId: orgId }),
+  ]);
 
   // Build the brand settings object with sensible defaults
   const settings: BrandSettings = {
@@ -33,9 +37,18 @@ export default async function CreatePostPage() {
     contactWebsite: brand?.contactWebsite ?? null,
   };
 
+  // Map DB templates to the shape TemplateSelector expects
+  const templates = dbTemplates.map((t) => ({
+    id: t.id,
+    name: t.name,
+    category: t.category,
+    thumbnailUrl: t.thumbnailUrl,
+    isSystem: t.isSystem,
+  }));
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <PostForm brandSettings={settings} />
+      <PostForm brandSettings={settings} templates={templates} />
     </div>
   );
 }

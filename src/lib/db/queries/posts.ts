@@ -6,7 +6,7 @@ import {
   brandSnapshots,
   activityLog,
 } from "@/lib/db/schema";
-import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
+import { eq, and, desc, sql, ilike, or, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export async function createPost(data: {
@@ -150,6 +150,7 @@ export async function listPosts(
   options?: {
     category?: string;
     sortBy?: "newest" | "most_shared" | "most_viewed";
+    search?: string;
     limit?: number;
     offset?: number;
   }
@@ -162,6 +163,16 @@ export async function listPosts(
   if (options?.category) {
     conditions.push(
       eq(generatedPosts.category, options.category as "business_win")
+    );
+  }
+
+  if (options?.search) {
+    const pattern = `%${options.search}%`;
+    conditions.push(
+      or(
+        ilike(generatedPosts.headline, pattern),
+        ilike(generatedPosts.actionVerb, pattern)
+      )!
     );
   }
 
@@ -218,4 +229,20 @@ export async function incrementPostDownloadCount(postId: string) {
     .update(generatedPosts)
     .set({ downloadCount: sql`${generatedPosts.downloadCount} + 1` })
     .where(eq(generatedPosts.id, postId));
+}
+
+export async function bulkDeletePosts(
+  organizationId: string,
+  postIds: string[]
+) {
+  if (postIds.length === 0) return;
+
+  await db
+    .delete(generatedPosts)
+    .where(
+      and(
+        eq(generatedPosts.organizationId, organizationId),
+        inArray(generatedPosts.id, postIds)
+      )
+    );
 }

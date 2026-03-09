@@ -7,6 +7,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PlusCircle, Building2, Image } from "lucide-react";
+import { requireAuth } from "@/lib/auth";
+import {
+  getDashboardStats,
+  getRecentActivity,
+  getOnboardingStatus,
+} from "@/lib/db/queries/dashboard";
+import { StatsBar } from "@/components/dashboard/stats-bar";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { OnboardingWizard } from "@/components/dashboard/onboarding-wizard";
 
 const quickActions = [
   {
@@ -29,7 +38,15 @@ const quickActions = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const { orgId } = await requireAuth();
+
+  const [stats, activities, onboarding] = await Promise.all([
+    getDashboardStats(orgId),
+    getRecentActivity(orgId),
+    getOnboardingStatus(orgId),
+  ]);
+
   return (
     <div className="space-y-8">
       {/* Welcome section */}
@@ -42,6 +59,18 @@ export default function DashboardPage() {
           and grow your business.
         </p>
       </div>
+
+      {/* Onboarding wizard for new users */}
+      {!onboarding.isComplete && (
+        <OnboardingWizard
+          hasBrand={onboarding.hasBrand}
+          hasPost={onboarding.hasPost}
+          hasShared={onboarding.hasShared}
+        />
+      )}
+
+      {/* Stats Bar */}
+      <StatsBar stats={stats} />
 
       {/* Quick actions */}
       <div>
@@ -67,6 +96,9 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* Recent Activity */}
+      <RecentActivity activities={activities} />
     </div>
   );
 }

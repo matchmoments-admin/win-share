@@ -18,6 +18,8 @@ export default async function PostsPage({
     typeof params.sort === "string"
       ? (params.sort as "newest" | "most_shared" | "most_viewed")
       : "newest";
+  const search =
+    typeof params.q === "string" ? params.q : undefined;
   const page =
     typeof params.page === "string" ? Math.max(1, parseInt(params.page, 10)) : 1;
 
@@ -26,6 +28,7 @@ export default async function PostsPage({
   const { posts, total } = await listPosts(orgId, {
     category,
     sortBy,
+    search,
     limit: PAGE_SIZE,
     offset,
   });
@@ -46,6 +49,7 @@ export default async function PostsPage({
         pageSize={PAGE_SIZE}
         category={category}
         sortBy={sortBy}
+        search={search}
       />
     </div>
   );

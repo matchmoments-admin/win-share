@@ -13,9 +13,10 @@ import { Sidebar } from "@/components/layout/sidebar";
 
 interface HeaderProps {
   title?: string;
+  postUsage?: { current: number; limit: number } | null;
 }
 
-export function Header({ title = "Dashboard" }: HeaderProps) {
+export function Header({ title = "Dashboard", postUsage }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4 lg:px-6">
       {/* Left side: mobile menu + title */}
@@ -30,7 +31,7 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-0" showCloseButton>
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <Sidebar />
+            <Sidebar postUsage={postUsage} />
           </SheetContent>
         </Sheet>
 

@@ -42,7 +42,7 @@ import { PlatformSelector } from "./platform-selector";
 import { PhotoUploader } from "./photo-uploader";
 import { ActionVerbPicker } from "./action-verb-picker";
 import { ColorPicker } from "./color-picker";
-import { TemplateSelector } from "./template-selector";
+import { TemplateSelector, type TemplateData } from "./template-selector";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -63,6 +63,7 @@ export type BrandSettings = {
 
 type PostFormProps = {
   brandSettings: BrandSettings;
+  templates?: TemplateData[];
 };
 
 // ---------------------------------------------------------------------------
@@ -85,7 +86,7 @@ const ALL_CATEGORIES = Object.values(CATEGORIES);
 // Component
 // ---------------------------------------------------------------------------
 
-export function PostForm({ brandSettings }: PostFormProps) {
+export function PostForm({ brandSettings, templates: dbTemplates }: PostFormProps) {
   const router = useRouter();
 
   // -- Step state --
@@ -326,6 +327,7 @@ export function PostForm({ brandSettings }: PostFormProps) {
                 categoryId={categoryId}
                 selectedTemplateId={templateId}
                 onChange={setTemplateId}
+                templates={dbTemplates}
               />
             </CardContent>
           </Card>
