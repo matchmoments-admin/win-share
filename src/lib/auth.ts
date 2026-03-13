@@ -74,10 +74,48 @@ export async function getCurrentOrg() {
 }
 
 /**
+ * Safe version of getCurrentOrg that returns null instead of throwing
+ * when the org is not found in the database (webhook race condition).
+ *
+ * Still throws for "Not authenticated" — callers should handle that
+ * or use requireAuth() instead.
+ */
+export async function getCurrentOrgSafe() {
+  const user = await currentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { orgId: clerkOrgId } = await auth();
+
+  if (!clerkOrgId) {
+    return { user, org: null, orgId: null, reason: "no-org" as const };
+  }
+
+  const org = await withRetry(async () => {
+    const [row] = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.clerkOrgId, clerkOrgId))
+      .limit(1);
+    return row;
+  });
+
+  if (!org) {
+    return { user, org: null, orgId: null, reason: "not-synced" as const };
+  }
+
+  return { user, org, orgId: org.id, reason: null };
+}
+
+/**
  * Require authentication and an active organization.
- * Redirects to /sign-in if not authenticated, or /dashboard if no org is found.
+ * Redirects to /sign-in if not authenticated.
  *
  * Use this in Server Components and Server Actions that need auth context.
+ * NOTE: Do NOT use this on the dashboard page itself — use getCurrentOrgSafe()
+ * to avoid redirect loops when the org hasn't synced yet.
  */
 export async function requireAuth() {
   try {
@@ -89,11 +127,8 @@ export async function requireAuth() {
       redirect("/sign-in");
     }
 
-    if (message.startsWith("No active organization")) {
-      redirect("/dashboard");
-    }
-
-    // Org not found in DB -- redirect to dashboard with a fallback
+    // For org-related errors (no active org, org not in DB),
+    // redirect to dashboard which handles these gracefully.
     redirect("/dashboard");
   }
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -6,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Building2, Image } from "lucide-react";
-import { requireAuth } from "@/lib/auth";
+import { PlusCircle, Building2, Image, Loader2 } from "lucide-react";
+import { getCurrentOrgSafe } from "@/lib/auth";
 import {
   getDashboardStats,
   getRecentActivity,
@@ -16,6 +17,7 @@ import {
 import { StatsBar } from "@/components/dashboard/stats-bar";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { OnboardingWizard } from "@/components/dashboard/onboarding-wizard";
+import { OrganizationSwitcher } from "@clerk/nextjs";
 
 const quickActions = [
   {
@@ -39,7 +41,58 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
-  const { orgId } = await requireAuth();
+  const result = await getCurrentOrgSafe();
+
+  // Not signed in
+  if (!result) {
+    redirect("/sign-in");
+  }
+
+  // User has no org selected in Clerk — let them pick/create one
+  if (result.reason === "no-org") {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Welcome to WinShare
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Create or select an organization to get started.
+          </p>
+        </div>
+        <OrganizationSwitcher
+          hidePersonal
+          afterSelectOrganizationUrl="/dashboard"
+          afterCreateOrganizationUrl="/dashboard"
+        />
+      </div>
+    );
+  }
+
+  // Org exists in Clerk but hasn't synced to DB yet (webhook race condition)
+  if (result.reason === "not-synced") {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">
+            Setting up your workspace...
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your organization is being synced. This usually takes a few seconds.
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            <a href="/dashboard" className="text-primary underline">
+              Refresh this page
+            </a>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Happy path — org is fully synced
+  const { orgId } = result;
 
   const [stats, activities, onboarding] = await Promise.all([
     getDashboardStats(orgId),
