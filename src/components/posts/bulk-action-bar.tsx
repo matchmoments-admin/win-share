@@ -100,7 +100,7 @@ export function BulkActionBar({
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t bg-background p-4 shadow-lg">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border/60 bg-card p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
       <div className="mx-auto flex max-w-4xl items-center justify-between">
         <div>
           <span className="text-sm font-medium">

@@ -15,10 +15,10 @@ export default async function BrandPage() {
     .limit(1);
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Brand Settings</h2>
-        <p className="mt-1 text-muted-foreground">
+        <h2 className="text-2xl font-bold tracking-tight">Brand settings</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Configure your brand identity. These settings are applied to every
           post you generate.
         </p>

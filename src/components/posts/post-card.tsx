@@ -106,9 +106,9 @@ export function PostCard({
   return (
     <Card
       className={cn(
-        "group overflow-hidden transition-shadow hover:shadow-md",
+        "group overflow-hidden border-border/60 transition-all duration-200 hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
         selectionMode && "cursor-pointer",
-        isSelected && "ring-2 ring-primary"
+        isSelected && "ring-1 ring-foreground"
       )}
       onClick={handleCardClick}
     >

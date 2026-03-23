@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Eye, Share2, Download } from "lucide-react";
 
 interface StatsOverviewProps {
@@ -19,54 +18,44 @@ interface StatsOverviewProps {
 export function StatsOverview({ totals, thisMonth }: StatsOverviewProps) {
   const items = [
     {
-      label: "Total Posts",
+      label: "Total posts",
       value: totals.totalPosts,
       subLabel: `${thisMonth.postsThisMonth} this month`,
       icon: FileText,
-      color: "text-blue-600 bg-blue-100",
     },
     {
-      label: "Total Views",
+      label: "Total views",
       value: totals.totalViews,
       subLabel: `${thisMonth.viewsThisMonth} this month`,
       icon: Eye,
-      color: "text-green-600 bg-green-100",
     },
     {
-      label: "Total Shares",
+      label: "Total shares",
       value: totals.totalShares,
       subLabel: `${thisMonth.sharesThisMonth} this month`,
       icon: Share2,
-      color: "text-purple-600 bg-purple-100",
     },
     {
-      label: "Total Downloads",
+      label: "Total downloads",
       value: totals.totalDownloads,
       subLabel: `${thisMonth.downloadsThisMonth} this month`,
       icon: Download,
-      color: "text-amber-600 bg-amber-100",
     },
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border/60 bg-border/60 lg:grid-cols-4">
       {items.map((item) => (
-        <Card key={item.label}>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${item.color}`}
-              >
-                <item.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-3xl font-bold">{item.value.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{item.label}</p>
-              </div>
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">{item.subLabel}</p>
-          </CardContent>
-        </Card>
+        <div key={item.label} className="bg-card p-5">
+          <div className="flex items-center gap-3">
+            <item.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">{item.label}</span>
+          </div>
+          <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">
+            {item.value.toLocaleString()}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">{item.subLabel}</p>
+        </div>
       ))}
     </div>
   );

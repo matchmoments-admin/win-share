@@ -9,9 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Check, Zap, ArrowRight } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -32,17 +30,17 @@ const faqs = [
   {
     question: "Can I try WinShare for free?",
     answer:
-      "Yes! The Free plan includes 3 posts per month and 5 AI captions. No credit card required to get started.",
+      "Yes. The Free plan includes 3 posts per month and 5 AI captions. No credit card required to get started.",
   },
   {
     question: "Can I change my plan at any time?",
     answer:
-      "Absolutely. You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate your billing.",
+      "You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we prorate your billing.",
   },
   {
     question: "What happens if I exceed my monthly limit?",
     answer:
-      "You'll see a notification when you're approaching your limit. Once you reach it, you'll need to upgrade to continue creating posts that month. Your existing posts remain accessible.",
+      "You will see a notification when approaching your limit. Once reached, you need to upgrade to continue creating posts that month. Existing posts remain accessible.",
   },
   {
     question: "Do you offer annual billing?",
@@ -52,7 +50,7 @@ const faqs = [
   {
     question: "Can I cancel at any time?",
     answer:
-      "Yes. You can cancel your subscription at any time from your billing page. You'll continue to have access until the end of your current billing period.",
+      "Yes. Cancel from your billing page at any time. You keep access until the end of your current billing period.",
   },
   {
     question: "Are the images watermarked?",
@@ -65,44 +63,45 @@ export default function PricingPage() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-gradient-to-b from-primary/5 via-background to-background py-20">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Start free, upgrade as you grow. No hidden fees, no surprises.
-          </p>
+      <section className="py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-lg">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Simple, transparent pricing
+            </h1>
+            <p className="mt-4 text-base text-muted-foreground">
+              Start free, upgrade as you grow. No hidden fees, no surprises.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Plan Cards */}
-      <section className="-mt-4 pb-20">
+      <section className="pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {tiers.map(({ key, popular }) => {
               const plan = PLAN_CONFIGS[key];
               return (
                 <Card
                   key={key}
                   className={cn(
-                    "relative flex flex-col",
-                    popular && "border-primary shadow-lg ring-2 ring-primary/20"
+                    "relative flex flex-col border-border/60",
+                    popular && "border-foreground"
                   )}
                 >
                   {popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-primary text-primary-foreground">
-                        <Zap className="mr-1 h-3 w-3" />
-                        Most Popular
-                      </Badge>
+                    <div className="absolute -top-3 left-6">
+                      <span className="rounded-md bg-foreground px-3 py-1 text-xs font-medium text-background">
+                        Recommended
+                      </span>
                     </div>
                   )}
 
                   <CardHeader className="pt-8">
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
+                    <CardTitle className="text-base">{plan.name}</CardTitle>
                     <CardDescription>
-                      <span className="text-4xl font-bold text-foreground">
+                      <span className="text-3xl font-bold tabular-nums text-foreground">
                         ${plan.price}
                       </span>
                       {plan.price > 0 && (
@@ -119,9 +118,9 @@ export default function PricingPage() {
                       {plan.features.map((feature) => (
                         <li
                           key={feature}
-                          className="flex items-start gap-2 text-sm"
+                          className="flex items-start gap-2.5 text-sm"
                         >
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -130,12 +129,15 @@ export default function PricingPage() {
 
                   <CardFooter>
                     <Button
-                      className="w-full"
-                      variant={popular ? "default" : "outline"}
+                      className={cn(
+                        "w-full rounded-md",
+                        !popular && "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      )}
+                      variant={popular ? "default" : "secondary"}
                       asChild
                     >
                       <Link href="/sign-up">
-                        {plan.price === 0 ? "Get Started Free" : `Start with ${plan.name}`}
+                        {plan.price === 0 ? "Get started free" : `Start with ${plan.name}`}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -147,23 +149,18 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <Separator className="mx-auto max-w-7xl" />
-
-      {/* FAQ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-3xl font-bold tracking-tight">
-            Frequently Asked Questions
+      {/* FAQ — clean divider style */}
+      <section className="border-t py-24">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Frequently asked questions
           </h2>
-          <p className="mt-3 text-center text-muted-foreground">
-            Everything you need to know about WinShare pricing.
-          </p>
 
-          <div className="mt-12 space-y-6">
+          <div className="mt-12 divide-y divide-border/60">
             {faqs.map((faq) => (
-              <div key={faq.question} className="rounded-lg border p-6">
-                <h3 className="font-semibold">{faq.question}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
+              <div key={faq.question} className="py-6 first:pt-0 last:pb-0">
+                <h3 className="text-sm font-medium">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {faq.answer}
                 </p>
               </div>
@@ -172,22 +169,24 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t bg-primary py-16 text-primary-foreground">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold tracking-tight">
-            Ready to start celebrating your wins?
-          </h2>
-          <p className="mt-3 text-primary-foreground/80">
-            Join 500+ businesses using WinShare. No credit card required.
-          </p>
-          <div className="mt-6">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/sign-up">
-                Get Started Free
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+      {/* CTA — warm card instead of dark block */}
+      <section className="border-t py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-xl border border-border/60 bg-card px-8 py-16 text-center sm:px-16">
+            <h2 className="text-2xl font-bold tracking-tight text-balance">
+              Ready to start celebrating your wins?
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Join 530+ businesses using WinShare. No credit card required.
+            </p>
+            <div className="mt-8">
+              <Button size="lg" asChild className="rounded-md">
+                <Link href="/sign-up">
+                  Get started free
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

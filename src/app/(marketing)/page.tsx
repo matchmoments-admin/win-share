@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   ArrowRight,
   Zap,
   Palette,
@@ -17,35 +11,26 @@ import {
   Megaphone,
   Users,
   Flag,
-  Bell,
-  Building2,
-  Home,
-  Shield,
-  TrendingUp,
-  Sparkles,
-  Car,
-  Wrench,
-  HeartPulse,
 } from "lucide-react";
 
 const steps = [
   {
-    number: "1",
-    title: "Set Your Brand",
+    number: "01",
+    title: "Set your brand",
     description:
-      "Upload your logo, pick your colors, and add your contact details. Takes 2 minutes.",
+      "Upload your logo, pick your colours, and add your contact details. Takes two minutes.",
     icon: Palette,
   },
   {
-    number: "2",
-    title: "Fill in the Details",
+    number: "02",
+    title: "Fill in the details",
     description:
       "Choose a category, add the client or milestone info, and pick your template.",
     icon: Zap,
   },
   {
-    number: "3",
-    title: "Share Everywhere",
+    number: "03",
+    title: "Share everywhere",
     description:
       "Download your branded post for Instagram, LinkedIn, Facebook, and more.",
     icon: Share2,
@@ -54,118 +39,105 @@ const steps = [
 
 const examplePosts = [
   {
-    title: "Just Financed!",
-    headline: "John & Sarah Smith — $750,000 Home Loan",
+    title: "Just Financed",
+    headline: "Priya & Raj Mehta — $685,000 home loan",
     category: "Business Win",
     icon: Trophy,
-    color: "bg-amber-100 text-amber-700",
+    accent: "bg-amber-50 text-amber-800",
   },
   {
-    title: "Just Thanked!",
-    headline: "Maria Garcia — Home Loan Refinance",
+    title: "Just Thanked",
+    headline: "Maria Gonzalez — home loan refinance",
     category: "Thank You",
     icon: Heart,
-    color: "bg-pink-100 text-pink-700",
+    accent: "bg-rose-50 text-rose-800",
   },
   {
-    title: "Just Reviewed!",
-    headline: "5 Stars from Chris Taylor on Google",
+    title: "Just Reviewed",
+    headline: "5 stars from Liam O'Brien on Google",
     category: "Review Highlight",
     icon: Star,
-    color: "bg-yellow-100 text-yellow-700",
+    accent: "bg-yellow-50 text-yellow-800",
   },
   {
-    title: "Just Reached!",
-    headline: "500 Loans Settled — $100M Milestone",
+    title: "Just Reached",
+    headline: "472 loans settled — $87M milestone",
     category: "Business Milestone",
     icon: Flag,
-    color: "bg-green-100 text-green-700",
+    accent: "bg-emerald-50 text-emerald-800",
   },
   {
-    title: "Just Recognised!",
-    headline: "Alex Johnson — 50 Deals This Quarter",
+    title: "Just Recognised",
+    headline: "Tanya Nguyen — 43 deals this quarter",
     category: "Shout Out",
     icon: Megaphone,
-    color: "bg-blue-100 text-blue-700",
+    accent: "bg-sky-50 text-sky-800",
   },
   {
-    title: "Just Introducing!",
-    headline: "Meet Sam Nguyen — Senior Mortgage Broker",
+    title: "Introducing",
+    headline: "Meet Daniel Abara — senior mortgage broker",
     category: "Team Spotlight",
     icon: Users,
-    color: "bg-purple-100 text-purple-700",
+    accent: "bg-violet-50 text-violet-800",
   },
-];
-
-const industries = [
-  { name: "Mortgage Brokers", icon: Building2 },
-  { name: "Real Estate", icon: Home },
-  { name: "Insurance", icon: Shield },
-  { name: "Financial Planning", icon: TrendingUp },
-  { name: "Cleaning Services", icon: Sparkles },
-  { name: "Automotive", icon: Car },
-  { name: "Trades", icon: Wrench },
-  { name: "Health & Wellness", icon: HeartPulse },
 ];
 
 export default function LandingPage() {
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Generate Branded Celebration Posts in{" "}
-              <span className="text-primary">30 Seconds</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              WinShare helps service businesses create professional, on-brand
-              social media posts to celebrate wins, thank clients, and build
-              trust. Works for mortgage brokers, real estate agents, tradespeople,
-              and more.
+      {/* Hero Section — left-aligned, asymmetric */}
+      <section className="py-24 sm:py-32 lg:py-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
+              For service businesses
             </p>
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Button size="lg" asChild>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl lg:leading-[1.08]">
+              Branded celebration posts in 30 seconds
+            </h1>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground">
+              WinShare helps mortgage brokers, real estate agents, tradespeople,
+              and other service businesses create professional social media posts
+              to celebrate wins, thank clients, and build trust.
+            </p>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Button size="lg" asChild className="rounded-md">
                 <Link href="/sign-up">
-                  Get Started Free
+                  Get started free
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/templates">See Examples</Link>
+              <Button variant="outline" size="lg" asChild className="rounded-md">
+                <Link href="/templates">See examples</Link>
               </Button>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-5 text-sm text-muted-foreground">
               Free plan includes 3 posts per month. No credit card required.
             </p>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="border-t bg-muted/30 py-20">
+      {/* How it works — left-aligned steps */}
+      <section className="border-t py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              How It Works
+          <div className="max-w-lg">
+            <h2 className="text-3xl font-bold tracking-tight text-balance">
+              How it works
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Three simple steps to go from win to post.
+              Three steps from win to post.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
             {steps.map((step) => (
-              <div key={step.number} className="relative text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <step.icon className="h-7 w-7" />
-                </div>
-                <div className="mb-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div key={step.number}>
+                <span className="font-mono text-sm text-muted-foreground">
                   {step.number}
-                </div>
-                <h3 className="text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
+                </span>
+                <h3 className="mt-3 text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.description}
                 </p>
               </div>
@@ -174,134 +146,132 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Example Posts */}
-      <section className="py-20">
+      {/* Example posts — 2-col asymmetric grid */}
+      <section className="border-t py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Posts That Get Noticed
+          <div className="max-w-lg">
+            <h2 className="text-3xl font-bold tracking-tight text-balance">
+              Posts that get noticed
             </h2>
             <p className="mt-3 text-muted-foreground">
-              See the types of celebration posts you can create with WinShare.
+              The types of celebration posts you can create with WinShare.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {examplePosts.map((post) => (
-              <Card
-                key={post.title}
-                className="transition-shadow hover:shadow-md"
-              >
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg ${post.color}`}
-                    >
-                      <post.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base">{post.title}</CardTitle>
-                      <p className="text-xs text-muted-foreground">
-                        {post.category}
-                      </p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="rounded-lg bg-muted/50 p-4">
-                    <p className="text-sm font-medium">{post.headline}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="border-t bg-muted/30 py-20">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Trusted by 500+ Businesses
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Service businesses across Australia use WinShare to celebrate their
-            wins on social media.
-          </p>
-
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            <div>
-              <p className="text-4xl font-bold text-primary">10,000+</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Posts Generated
-              </p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">500+</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Active Businesses
-              </p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">30s</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Average Post Creation Time
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industries */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Built for Every Service Industry
-            </h2>
-            <p className="mt-3 text-muted-foreground">
-              WinShare works for any business that wants to celebrate wins and
-              build trust on social media.
-            </p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {industries.map((industry) => (
+          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr]">
+            {examplePosts.map((post, i) => (
               <div
-                key={industry.name}
-                className="flex flex-col items-center gap-3 rounded-lg border bg-card p-6 text-center transition-shadow hover:shadow-sm"
+                key={post.title}
+                className={`group flex items-start gap-4 rounded-lg border border-border/60 p-5 transition-all duration-200 hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${
+                  i === 0 || i === 3 ? "lg:col-span-1" : ""
+                }`}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <industry.icon className="h-6 w-6" />
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${post.accent}`}
+                >
+                  <post.icon className="h-5 w-5" />
                 </div>
-                <p className="text-sm font-medium">{industry.name}</p>
+                <div className="min-w-0">
+                  <p className="font-medium">{post.title}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {post.category}
+                  </p>
+                  <p className="mt-2.5 text-sm text-muted-foreground">
+                    {post.headline}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="border-t bg-primary py-20 text-primary-foreground">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Start Creating Free Today
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-primary-foreground/80">
-            Join hundreds of service businesses already using WinShare to
-            celebrate their wins and grow their brand on social media.
-          </p>
-          <div className="mt-8">
-            <Button
-              size="lg"
-              variant="secondary"
-              asChild
-            >
-              <Link href="/sign-up">
-                Get Started Free
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+      {/* Social proof — large typography, no cards */}
+      <section className="border-t py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 text-center sm:grid-cols-3 sm:text-left">
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight tabular-nums">
+                12,400+
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Posts generated
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight tabular-nums">
+                530+
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Active businesses
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-5xl font-bold tracking-tight tabular-nums">
+                &lt;30s
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Average creation time
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Industries — minimal, no card borders */}
+      <section className="border-t py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-lg">
+            <h2 className="text-3xl font-bold tracking-tight text-balance">
+              Built for every service industry
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Works for any business that celebrates wins and builds trust on
+              social media.
+            </p>
+          </div>
+
+          <div className="mt-12 flex flex-wrap gap-3">
+            {[
+              "Mortgage brokers",
+              "Real estate",
+              "Insurance",
+              "Financial planning",
+              "Cleaning services",
+              "Automotive",
+              "Trades",
+              "Health & wellness",
+            ].map((name) => (
+              <span
+                key={name}
+                className="rounded-md border border-border/60 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:border-border hover:text-foreground"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA — warm, not jarring */}
+      <section className="border-t py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-xl bg-card border border-border/60 px-8 py-16 text-center sm:px-16">
+            <h2 className="text-3xl font-bold tracking-tight text-balance">
+              Start celebrating your wins today
+            </h2>
+            <p className="mx-auto mt-4 max-w-md text-muted-foreground">
+              Join hundreds of service businesses already using WinShare to grow
+              their brand on social media.
+            </p>
+            <div className="mt-8">
+              <Button size="lg" asChild className="rounded-md">
+                <Link href="/sign-up">
+                  Get started free
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

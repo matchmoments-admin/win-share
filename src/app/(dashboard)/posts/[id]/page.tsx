@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
@@ -90,9 +89,9 @@ export default async function PostDetailPage({
           </Link>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              Just {post.actionVerb}!
+              Just {post.actionVerb}
             </h1>
-            <p className="text-muted-foreground">{post.headline}</p>
+            <p className="text-sm text-muted-foreground">{post.headline}</p>
           </div>
         </div>
 
@@ -107,85 +106,72 @@ export default async function PostDetailPage({
       </div>
 
       {/* Post Metadata */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Post Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Category
-              </p>
-              <Badge variant="secondary">
-                {formatCategoryLabel(post.category)}
-              </Badge>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Action Verb
-              </p>
-              <p className="text-sm font-medium">{post.actionVerb}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Created
-              </p>
-              <p className="flex items-center gap-1.5 text-sm">
-                <Calendar className="size-3.5 text-muted-foreground" />
-                {formatDate(post.createdAt)}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground">
-                Status
-              </p>
-              <Badge
-                variant={post.status === "published" ? "default" : "outline"}
-              >
-                {post.status}
-              </Badge>
-            </div>
+      <div className="rounded-lg border border-border/60 p-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">Category</p>
+            <p className="text-sm font-medium">
+              {formatCategoryLabel(post.category)}
+            </p>
           </div>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">Action verb</p>
+            <p className="text-sm font-medium">{post.actionVerb}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">Created</p>
+            <p className="flex items-center gap-1.5 text-sm">
+              <Calendar className="size-3.5 text-muted-foreground" />
+              {formatDate(post.createdAt)}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">Status</p>
+            <Badge
+              variant={post.status === "published" ? "default" : "outline"}
+            >
+              {post.status}
+            </Badge>
+          </div>
+        </div>
 
-          <Separator className="my-4" />
-
+        <div className="mt-6 border-t pt-6">
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                <Eye className="size-4" />
-                <span className="text-2xl font-bold text-foreground">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Eye className="size-3.5" />
+                <span className="text-xl font-semibold tabular-nums text-foreground">
                   {post.viewCount}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Views</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Views</p>
             </div>
             <div>
-              <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                <Share2 className="size-4" />
-                <span className="text-2xl font-bold text-foreground">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Share2 className="size-3.5" />
+                <span className="text-xl font-semibold tabular-nums text-foreground">
                   {post.shareCount}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Shares</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Shares</p>
             </div>
             <div>
-              <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                <DownloadIcon className="size-4" />
-                <span className="text-2xl font-bold text-foreground">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <DownloadIcon className="size-3.5" />
+                <span className="text-xl font-semibold tabular-nums text-foreground">
                   {post.downloadCount}
                 </span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Downloads</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Downloads</p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Generated Images */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Generated Images</h2>
+        <h3 className="text-sm font-medium text-muted-foreground">Generated images</h3>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {post.images.map((image) => (
             <Card key={image.id} className="overflow-hidden">

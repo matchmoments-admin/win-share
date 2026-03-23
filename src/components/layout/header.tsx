@@ -18,24 +18,22 @@ interface HeaderProps {
 
 export function Header({ title = "Dashboard", postUsage }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4 lg:px-6">
+    <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border/60 bg-background px-4 lg:px-8">
       {/* Left side: mobile menu + title */}
       <div className="flex items-center gap-3">
         {/* Mobile sidebar trigger */}
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-5 w-5" />
+              <Menu className="h-4 w-4" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0" showCloseButton>
+          <SheetContent side="left" className="w-60 p-0" showCloseButton>
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <Sidebar postUsage={postUsage} />
           </SheetContent>
         </Sheet>
-
-        <h1 className="text-lg font-semibold">{title}</h1>
       </div>
 
       {/* Right side: Clerk components */}
@@ -47,7 +45,7 @@ export function Header({ title = "Dashboard", postUsage }: HeaderProps) {
             elements: {
               rootBox: "flex items-center",
               organizationSwitcherTrigger:
-                "rounded-lg border border-input px-3 py-1.5 text-sm",
+                "rounded-md border border-border/60 px-3 py-1.5 text-sm",
             },
           }}
         />

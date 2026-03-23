@@ -35,20 +35,20 @@ export function Sidebar({ className, postUsage }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex h-full w-64 flex-col bg-gray-900 text-white",
+        "flex h-full w-60 flex-col border-r border-border/60 bg-sidebar",
         className
       )}
     >
       {/* Logo / Brand */}
-      <div className="flex h-16 items-center gap-2 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
-          <span className="text-sm font-bold">W</span>
+      <div className="flex h-16 items-center gap-2.5 px-6">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-foreground text-background">
+          <span className="text-xs font-bold">W</span>
         </div>
-        <span className="text-lg font-semibold tracking-tight">WinShare</span>
+        <span className="text-base font-semibold tracking-tight">WinShare</span>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="flex-1 space-y-0.5 px-3 py-4">
         {navigation.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/");
@@ -57,17 +57,14 @@ export function Sidebar({ className, postUsage }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors duration-200",
                 isActive
-                  ? "bg-white/15 text-white"
-                  : "text-gray-400 hover:bg-white/5 hover:text-white"
+                  ? "bg-accent font-medium text-foreground"
+                  : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
               )}
             >
-              <item.icon className="h-5 w-5 shrink-0" />
+              <item.icon className="h-4 w-4 shrink-0" />
               {item.name}
-              {isActive && (
-                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-white" />
-              )}
             </Link>
           );
         })}
@@ -75,14 +72,14 @@ export function Sidebar({ className, postUsage }: SidebarProps) {
 
       {/* Usage Meter */}
       {postUsage && (
-        <div className="border-t border-white/10">
+        <div className="border-t border-border/60">
           <SidebarUsage current={postUsage.current} limit={postUsage.limit} />
         </div>
       )}
 
       {/* Footer */}
-      <div className="border-t border-white/10 px-6 py-4">
-        <p className="text-xs text-gray-500">
+      <div className="border-t border-border/60 px-6 py-4">
+        <p className="text-xs text-muted-foreground">
           &copy; {new Date().getFullYear()} WinShare
         </p>
       </div>

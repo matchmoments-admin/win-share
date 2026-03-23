@@ -15,18 +15,20 @@ export default async function ReviewsPage() {
     .orderBy(desc(reviewRequests.createdAt));
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-3xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Review Requests</h1>
-        <p className="text-muted-foreground">
+        <h2 className="text-2xl font-bold tracking-tight">Review requests</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Generate review request links and QR codes to collect client reviews.
         </p>
       </div>
 
       <ReviewRequestForm />
 
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Recent Requests</h2>
+      <div className="border-t pt-8">
+        <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+          Recent requests
+        </h3>
         <ReviewList requests={requests} />
       </div>
     </div>

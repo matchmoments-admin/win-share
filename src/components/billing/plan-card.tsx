@@ -11,8 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Check, Zap, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PlanCardProps {
@@ -69,7 +68,7 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {tierOrder.map((tier, index) => {
           const plan = PLAN_CONFIGS[tier];
           const isCurrent = tier === currentTier;
@@ -80,30 +79,31 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
             <Card
               key={tier}
               className={cn(
-                "relative flex flex-col",
-                isCurrent && "border-primary ring-2 ring-primary/20",
-                isPopular && !isCurrent && "border-amber-400"
+                "relative flex flex-col border-border/60",
+                isCurrent && "border-foreground",
+                isPopular && !isCurrent && "border-foreground/40"
               )}
             >
-              {isPopular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-amber-500 text-white hover:bg-amber-500">
-                    <Zap className="mr-1 h-3 w-3" />
-                    Most Popular
-                  </Badge>
+              {isCurrent && (
+                <div className="absolute -top-3 left-6">
+                  <span className="rounded-md bg-foreground px-3 py-1 text-xs font-medium text-background">
+                    Current plan
+                  </span>
                 </div>
               )}
 
-              {isCurrent && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge>Current Plan</Badge>
+              {isPopular && !isCurrent && (
+                <div className="absolute -top-3 left-6">
+                  <span className="rounded-md bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                    Recommended
+                  </span>
                 </div>
               )}
 
               <CardHeader className="pt-8">
-                <CardTitle className="text-lg">{plan.name}</CardTitle>
+                <CardTitle className="text-base">{plan.name}</CardTitle>
                 <CardDescription>
-                  <span className="text-3xl font-bold text-foreground">
+                  <span className="text-3xl font-bold tabular-nums text-foreground">
                     ${plan.price}
                   </span>
                   {plan.price > 0 && (
@@ -115,8 +115,8 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
               <CardContent className="flex-1">
                 <ul className="space-y-2.5">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                    <li key={feature} className="flex items-start gap-2.5 text-sm">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -126,15 +126,15 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
               <CardFooter>
                 {isCurrent ? (
                   <Button
-                    variant="outline"
-                    className="w-full"
+                    variant="secondary"
+                    className="w-full rounded-md"
                     disabled
                   >
-                    Current Plan
+                    Current plan
                   </Button>
                 ) : isUpgrade ? (
                   <Button
-                    className="w-full"
+                    className="w-full rounded-md"
                     onClick={() => handleUpgrade(tier)}
                     disabled={loadingTier !== null}
                   >
@@ -149,8 +149,8 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
                   </Button>
                 ) : (
                   <Button
-                    variant="outline"
-                    className="w-full"
+                    variant="secondary"
+                    className="w-full rounded-md"
                     disabled
                   >
                     Downgrade
@@ -166,16 +166,17 @@ export function PlanCard({ currentTier, hasStripeSubscription }: PlanCardProps) 
         <div className="flex justify-center">
           <Button
             variant="outline"
+            className="rounded-md"
             onClick={handleManageSubscription}
             disabled={portalLoading}
           >
             {portalLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Opening Portal...
+                Opening portal...
               </>
             ) : (
-              "Manage Subscription"
+              "Manage subscription"
             )}
           </Button>
         </div>

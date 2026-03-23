@@ -1,10 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 interface CategoryData {
   category: string;
   count: number;
@@ -22,65 +15,52 @@ function formatCategory(raw: string): string {
 export function CategoryBreakdown({ data }: { data: CategoryData[] }) {
   if (data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Category Breakdown</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div>
+        <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+          Posts by category
+        </h3>
+        <div className="rounded-lg border border-border/60 p-6">
           <p className="text-sm text-muted-foreground">
             No data to display yet.
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   const maxCount = Math.max(...data.map((d) => d.count), 1);
 
-  const colors = [
-    "bg-blue-500",
-    "bg-purple-500",
-    "bg-amber-500",
-    "bg-green-500",
-    "bg-red-500",
-    "bg-teal-500",
-    "bg-pink-500",
-  ];
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Posts by Category</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {data.map((item, index) => {
-            const percentage = (item.count / maxCount) * 100;
-            const barColor = colors[index % colors.length];
+    <div>
+      <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+        Posts by category
+      </h3>
+      <div className="space-y-4 rounded-lg border border-border/60 p-5">
+        {data.map((item) => {
+          const percentage = (item.count / maxCount) * 100;
 
-            return (
-              <div key={item.category} className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">
-                    {formatCategory(item.category)}
-                  </span>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span>{item.count} posts</span>
-                    <span>{item.views} views</span>
-                    <span>{item.shares} shares</span>
-                  </div>
-                </div>
-                <div className="h-3 w-full overflow-hidden rounded-full bg-secondary">
-                  <div
-                    className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-                    style={{ width: `${percentage}%` }}
-                  />
+          return (
+            <div key={item.category} className="space-y-1.5">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">
+                  {formatCategory(item.category)}
+                </span>
+                <div className="flex items-center gap-3 text-xs tabular-nums text-muted-foreground">
+                  <span>{item.count} posts</span>
+                  <span>{item.views} views</span>
+                  <span>{item.shares} shares</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                <div
+                  className="h-full rounded-full bg-foreground/20 transition-all duration-700"
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

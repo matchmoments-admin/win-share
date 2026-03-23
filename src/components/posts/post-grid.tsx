@@ -232,9 +232,9 @@ export function PostGrid({
 
       {/* Grid */}
       {postList.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
-          <LayoutGrid className="mb-4 h-12 w-12 text-muted-foreground/40" />
-          <h3 className="text-lg font-semibold">No posts yet</h3>
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border/60 py-16 text-center">
+          <LayoutGrid className="mb-4 h-10 w-10 text-muted-foreground/30" />
+          <h3 className="text-base font-medium">No posts yet</h3>
           <p className="mt-1 text-sm text-muted-foreground">
             {search
               ? "No posts match your search. Try a different query."

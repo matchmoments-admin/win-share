@@ -34,10 +34,10 @@ export default async function PostsPage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">My Posts</h2>
-        <p className="mt-1 text-muted-foreground">
+        <h2 className="text-2xl font-bold tracking-tight">My posts</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Browse, share, and manage all your generated posts.
         </p>
       </div>

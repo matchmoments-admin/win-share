@@ -6,7 +6,6 @@ import { getMonthlyUsage } from "@/lib/usage/check";
 import { PLAN_CONFIGS, type PlanTier } from "@/lib/stripe";
 import { PlanCard } from "@/components/billing/plan-card";
 import { UsageMeter } from "@/components/billing/usage-meter";
-import { Separator } from "@/components/ui/separator";
 
 export default async function BillingPage() {
   const { orgId } = await requireAuth();
@@ -27,41 +26,43 @@ export default async function BillingPage() {
   ]);
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8">
       {/* Page Header */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Billing</h2>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           Manage your subscription and monitor your usage.
         </p>
       </div>
 
       {/* Current Usage */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold">Current Usage</h3>
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-lg border p-4">
+        <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+          Current usage
+        </h3>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-lg border border-border/60 p-5">
             <UsageMeter
               current={postUsage}
               limit={plan.monthlyPostLimit}
-              label="Posts Generated"
+              label="Posts generated"
             />
           </div>
-          <div className="rounded-lg border p-4">
+          <div className="rounded-lg border border-border/60 p-5">
             <UsageMeter
               current={captionUsage}
               limit={plan.monthlyCaptionLimit}
-              label="AI Captions"
+              label="AI captions"
             />
           </div>
         </div>
       </div>
 
-      <Separator />
-
       {/* Plan Cards */}
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Plans</h3>
+      <div className="border-t pt-8">
+        <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+          Plans
+        </h3>
         <PlanCard
           currentTier={currentTier}
           hasStripeSubscription={hasStripeSubscription}

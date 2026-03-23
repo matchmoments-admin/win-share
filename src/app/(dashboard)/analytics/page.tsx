@@ -18,7 +18,7 @@ export default async function AnalyticsPage() {
     <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Analytics</h2>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           Track your post performance, engagement, and content trends.
         </p>
       </div>
