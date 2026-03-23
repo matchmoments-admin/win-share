@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "api.templated.io" },
     ],
   },
-  serverExternalPackages: ["pino", "pino-pretty"],
+  serverExternalPackages: ["pino", "pino-pretty", "sharp", "@resvg/resvg-js"],
   async headers() {
     return [
       {

@@ -124,12 +124,19 @@ export class TemplatedIoGenerator implements ImageGenerator {
   }
 }
 
-// Singleton instance
-let generator: TemplatedIoGenerator | null = null;
+// Singleton instances
+let templatedGenerator: TemplatedIoGenerator | null = null;
 
-export function getImageGenerator(): ImageGenerator {
-  if (!generator) {
-    generator = new TemplatedIoGenerator();
+export function getImageGenerator(
+  engine: "satori" | "templated_io" = "templated_io"
+): ImageGenerator {
+  if (engine === "satori") {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { getSatoriRenderer } = require("./satori-renderer");
+    return getSatoriRenderer();
   }
-  return generator;
+  if (!templatedGenerator) {
+    templatedGenerator = new TemplatedIoGenerator();
+  }
+  return templatedGenerator;
 }

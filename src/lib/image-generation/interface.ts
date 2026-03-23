@@ -1,8 +1,18 @@
+import type { OverlayZone } from "./archetypes";
+
 export interface ImageRenderRequest {
   templateId: string;
   layers: LayerData[];
   platform: Platform;
   watermark: boolean;
+  // Satori renderer fields
+  renderEngine?: "satori" | "templated_io";
+  archetype?: string;
+  backgroundUrl?: string;
+  overlayZones?: OverlayZone[];
+  fontFamily?: string;
+  headlineColor?: string;
+  subheadColor?: string;
 }
 
 export interface LayerData {

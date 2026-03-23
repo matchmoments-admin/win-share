@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
-import { brandSettings, organizations, users } from "@/lib/db/schema";
+import { brandSettings, organizations, users, templates } from "@/lib/db/schema";
 import { checkUsageLimit } from "@/lib/usage/check";
 import { trackUsageEvent } from "@/lib/usage/track";
 import { getImageGenerator } from "@/lib/image-generation/templated-io";
@@ -127,8 +127,23 @@ export async function POST(req: Request) {
       { watermark }
     );
 
+    // Look up template to determine render engine
+    let templateRecord = null;
+    if (data.templateId && data.templateId !== "default") {
+      templateRecord = await db.query.templates.findFirst({
+        where: eq(templates.id, data.templateId),
+      });
+    }
+
+    const engine =
+      (templateRecord?.renderEngine as "satori" | "templated_io") ?? "satori";
+    const backgroundUrls =
+      (templateRecord?.backgroundUrls as Record<string, string>) ?? {};
+    const archetype =
+      (templateRecord?.archetype as string) ?? "full_photo_overlay";
+
     // Generate images for each platform in parallel
-    const generator = getImageGenerator();
+    const generator = getImageGenerator(engine);
     const imageResults = await Promise.all(
       data.platforms.map(async (platform) => {
         try {
@@ -137,6 +152,13 @@ export async function POST(req: Request) {
             layers,
             platform: platform as keyof typeof PLATFORM_DIMENSIONS,
             watermark,
+            renderEngine: engine,
+            archetype,
+            backgroundUrl: backgroundUrls[platform] ?? undefined,
+            overlayZones: [],
+            fontFamily: (templateRecord?.fontFamily as string) ?? "Inter",
+            headlineColor: (templateRecord?.headlineColor as string) ?? "#FFFFFF",
+            subheadColor: (templateRecord?.subheadColor as string) ?? "#FFFFFF",
           });
           return {
             platform,

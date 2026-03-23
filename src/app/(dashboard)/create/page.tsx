@@ -44,6 +44,8 @@ export default async function CreatePostPage() {
     category: t.category,
     thumbnailUrl: t.thumbnailUrl,
     isSystem: t.isSystem,
+    archetype: t.archetype,
+    renderEngine: t.renderEngine,
   }));
 
   return (

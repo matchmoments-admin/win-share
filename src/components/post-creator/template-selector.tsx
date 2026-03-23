@@ -14,6 +14,8 @@ export type TemplateData = {
   category: string;
   thumbnailUrl: string | null;
   isSystem: boolean;
+  archetype?: string | null;
+  renderEngine?: string | null;
 };
 
 type TemplateSelectorProps = {

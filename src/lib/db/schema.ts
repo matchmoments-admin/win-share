@@ -108,6 +108,11 @@ export const imageFormatEnum = pgEnum("image_format", [
   "webp",
 ]);
 
+export const renderEngineEnum = pgEnum("render_engine", [
+  "satori",
+  "templated_io",
+]);
+
 // ============================================================================
 // Helper: generate prefixed nanoid
 // ============================================================================
@@ -238,11 +243,19 @@ export const templates = pgTable(
     name: text("name").notNull(),
     category: contentCategoryEnum("category").notNull(),
     industry: industryEnum("industry"),
-    platform: platformEnum("platform").notNull(),
+    platform: platformEnum("platform"),
     templatedIoId: text("templated_io_id"),
     thumbnailUrl: text("thumbnail_url"),
     isSystem: boolean("is_system").default(false).notNull(),
     isActive: boolean("is_active").default(true).notNull(),
+    // Satori renderer fields
+    renderEngine: renderEngineEnum("render_engine").default("satori").notNull(),
+    archetype: text("archetype"),
+    backgroundUrls: jsonb("background_urls"),
+    overlayZones: jsonb("overlay_zones"),
+    fontFamily: text("font_family").default("Inter"),
+    headlineColor: text("headline_color").default("#FFFFFF"),
+    subheadColor: text("subhead_color").default("#FFFFFF"),
     ...timestamps,
   },
   (table) => [
